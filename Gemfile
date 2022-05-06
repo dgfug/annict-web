@@ -3,9 +3,9 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby "3.0.2"
+ruby "3.1.2"
 
-gem "rails", ">= 6.1.0"
+gem "rails", "~> 7.0.0"
 
 gem "active_decorator"
 gem "active_link_to"
@@ -18,6 +18,7 @@ gem "by_star"
 gem "cld"
 gem "commonmarker" # Using github-markup
 gem "counter_culture"
+gem "cssbundling-rails"
 gem "delayed_job_active_record"
 gem "devise"
 gem "discord-notifier"
@@ -38,8 +39,9 @@ gem "htmlrb", github: "kiraka/htmlrb", branch: "main"
 gem "http_accept_language"
 gem "httparty"
 gem "image_processing"
-gem "imgix-rails"
+gem "imgproxy"
 gem "jb"
+gem "jsbundling-rails"
 gem "kaminari"
 gem "koala"
 gem "memory_profiler" # Used by rack-mini-profiler
@@ -54,6 +56,7 @@ gem "omniauth-rails_csrf_protection"
 gem "omniauth-twitter"
 gem "pg"
 gem "prelude-batch-loader", require: "prelude"
+gem "propshaft"
 gem "puma"
 gem "puma_worker_killer"
 gem "pundit"
@@ -91,12 +94,13 @@ group :development do
   gem "better_errors"
   gem "binding_of_caller" # Using better_errors
   gem "bullet"
-  gem "graphql-docs"
+  # Temporary comment out until graphql-docs will replace sass with sassc.
+  # The sass gem causes LoadError.
+  # https://github.com/gjtorikian/graphql-docs/issues/86
+  # gem "graphql-docs"
   gem "i18n-tasks"
   gem "listen" # Using with `rails s` since Rails 5
   gem "solargraph"
-  gem "spring"
-  gem "spring-commands-rspec", require: false
   gem "squasher"
   gem "traceroute"
 end
@@ -106,8 +110,4 @@ group :test do
   # https://github.com/codeclimate/test-reporter/issues/418
   gem "simplecov", "< 0.22", require: false
   gem "timecop"
-end
-
-group :production do
-  gem "lograge"
 end

@@ -13,7 +13,7 @@ jobs:
       - name: Setup Ruby and install gems
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 3.0.2
+          ruby-version: 3.1.2
           bundler-cache: true
 
       - name: Run Standard`
@@ -36,7 +36,7 @@ jobs:
 
     services:
       postgresql:
-        image: postgres:12.4
+        image: postgres:14.2
         ports:
           - 5432:5432
         env:
@@ -58,21 +58,21 @@ jobs:
       - name: Setup Ruby and install gems
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 3.0.2
+          ruby-version: 3.1.2
           bundler-cache: true
 
       - name: Setup Node
         uses: actions/setup-node@v1
         with:
-          node-version: 14.17.3
+          node-version: 16.14.2
 
-      - name: Run `npm install`
+      - name: Run `yarn install`
         run: |
-          npm install
+          yarn install
 
-      - name: Run `npm run heroku-postbuild`
+      - name: Run `assets:precompile`
         run: |
-          npm run heroku-postbuild
+          bin/rails assets:precompile
 
       - name: Setup Database
         run: |

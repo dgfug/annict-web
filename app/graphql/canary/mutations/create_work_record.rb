@@ -30,7 +30,7 @@ module Canary
       field :record, Canary::Types::Objects::RecordType, null: true
       field :errors, [Canary::Types::Objects::ClientErrorType], null: false
 
-      def resolve( # rubocop:disable Metrics/ParameterLists
+      def resolve(
         work_id:,
         rating_overall: nil,
         rating_animation: nil,
@@ -45,8 +45,8 @@ module Canary
         viewer = context[:viewer]
         work = Work.only_kept.find_by_graphql_id(work_id)
 
-        form = Forms::WorkRecordForm.new(
-          work: work,
+        form = Forms::WorkRecordForm.new(user: viewer, work: work)
+        form.attributes = {
           rating_overall: rating_overall,
           rating_animation: rating_animation,
           rating_music: rating_music,
@@ -54,7 +54,7 @@ module Canary
           rating_character: rating_character,
           comment: comment,
           share_to_twitter: share_to_twitter
-        )
+        }
 
         if form.invalid?
           return {

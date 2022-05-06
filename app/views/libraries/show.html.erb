@@ -1,7 +1,7 @@
 <% action = t("enumerize.status.kind_action.#{params[:status_kind]}") %>
 <% title = t "head.title.libraries.show", profile_name: @user.profile.name, username: @user.username, action: action %>
 <% description = meta_description(t("head.meta.description.libraries.show", profile_name: @user.profile.name, username: @user.username, action: action)) %>
-<% image_url = ann_avatar_image_url(@user, width: 640) %>
+<% image_url = ann_avatar_image_url(@user, width: 200, format: "jpg") %>
 <% set_meta_tags(title: title, description: description, og: { description: description, image: image_url }, twitter: { description: description, image: image_url }, reverse: true, prefix: false) %>
 
 <%= component_value_fetcher_tag("follow-button", internal_api_following_list_path) %>
@@ -14,6 +14,8 @@
   </div>
 
   <%= Navs::UserNavComponent.new(self, user: @user, params: params).render %>
+
+  <%= AdsenseComponent.new(self, slot: ENV["GOOGLE_AD_SLOT_ON_LIBRARY"]).render %>
 
   <ul class="justify-content-center mt-3 nav nav-pills">
     <% %i(watching wanna_watch watched on_hold stop_watching).each do |status_kind| %>
@@ -47,7 +49,7 @@
               <div class="card-body">
                 <% works = season.no_season? ? @works.with_no_season : @works.by_season(season.slug) %>
                 <% works = works.order(watchers_count: :desc).includes(:work_image) %>
-                <%= render "libraries/display_options/grid", works: works, user: @user %>
+                <%= render "libraries/display_options/grid", works: works, library_entries: @library_entries, user: @user %>
               </div>
             </div>
           </div>

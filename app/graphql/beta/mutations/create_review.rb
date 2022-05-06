@@ -14,7 +14,7 @@ module Beta
 
       field :review, Beta::Types::Objects::ReviewType, null: true
 
-      def resolve( # rubocop:disable Metrics/ParameterLists
+      def resolve(
         work_id:,
         body:, title: nil,
         rating_overall_state: nil,
@@ -29,18 +29,18 @@ module Beta
 
         viewer = context[:viewer]
         work = Work.only_kept.find_by_graphql_id(work_id)
+        oauth_application = context[:doorkeeper_token].application
 
-        form = Forms::WorkRecordForm.new(
-          work: work,
+        form = Forms::WorkRecordForm.new(user: viewer, work: work, oauth_application: oauth_application)
+        form.attributes = {
           comment: title.present? ? "#{title}\n\n#{body}" : body,
-          oauth_application: context[:doorkeeper_token].application,
           rating_animation: rating_animation_state,
           rating_character: rating_character_state,
           rating_music: rating_music_state,
           rating_overall: rating_overall_state,
           rating_story: rating_story_state,
           share_to_twitter: share_twitter&.to_s
-        )
+        }
 
         if form.invalid?
           raise GraphQL::ExecutionError, form.errors.full_messages.first

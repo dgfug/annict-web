@@ -4,18 +4,15 @@
 #
 # Table name: collection_items
 #
-#  id              :bigint           not null, primary key
-#  aasm_state      :string           default("published"), not null
-#  comment         :text
-#  deleted_at      :datetime
-#  position        :integer          default(0), not null
-#  reactions_count :integer          default(0), not null
-#  title           :string           not null
-#  created_at      :datetime         not null
-#  updated_at      :datetime         not null
-#  collection_id   :bigint           not null
-#  user_id         :bigint           not null
-#  work_id         :bigint           not null
+#  id            :bigint           not null, primary key
+#  body          :text             default(""), not null
+#  deleted_at    :datetime
+#  position      :integer          default(0), not null
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
+#  collection_id :bigint           not null
+#  user_id       :bigint           not null
+#  work_id       :bigint           not null
 #
 # Indexes
 #
@@ -37,11 +34,9 @@ class CollectionItem < ApplicationRecord
 
   acts_as_list scope: :collection_id
 
-  belongs_to :user
-  belongs_to :collection, touch: true
-  belongs_to :work
-  has_many :reactions, dependent: :destroy
+  counter_culture :collection, column_name: ->(collection_item) { collection_item.not_deleted? ? :collection_items_count : nil }
 
-  validates :title, presence: true, length: {maximum: 50}
-  validates :comment, length: {maximum: 1000}
+  belongs_to :user
+  belongs_to :collection
+  belongs_to :work
 end

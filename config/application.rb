@@ -2,17 +2,13 @@
 
 require_relative "boot"
 
-%w[
-  rails
-  active_model/railtie
-  active_job/railtie
-  active_record/railtie
-  action_controller/railtie
-  action_mailer/railtie
-  action_view/railtie
-].each do |railtie|
-  require railtie
-end
+require "rails"
+require "active_model/railtie"
+require "active_job/railtie"
+require "active_record/railtie"
+require "action_controller/railtie"
+require "action_mailer/railtie"
+require "action_view/railtie"
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
@@ -49,6 +45,8 @@ module Annict
     config.i18n.default_locale = :ja
     config.i18n.available_locales = %i[ja en]
 
+    config.asset_host = ENV.fetch("ANNICT_ASSET_URL")
+
     config.generators do |g|
       g.test_framework :rspec, controller_specs: false, helper_specs: false,
                                routing_specs: false, view_specs: false
@@ -58,17 +56,9 @@ module Annict
     config.active_job.queue_adapter = :delayed_job
 
     config.middleware.insert_before(Rack::Runtime, Rack::Rewrite) do
-      # Redirect: annict.herokuapp.com -> annict.com
-      r301(/.*/, "https://#{ENV.fetch("ANNICT_HOST")}$&", if: proc { |rack_env|
-        rack_env["SERVER_NAME"].include?("annict.herokuapp.com")
-      })
-      # Redirect: www.annict.com -> annict.com
+      # Redirect: www.annict.com, ja.annict.com, jp.annict.com -> annict.com
       r301 /.*/, "https://#{ENV.fetch('ANNICT_HOST')}$&", if: proc { |rack_env|
-        rack_env["SERVER_NAME"].in?(["www.#{ENV.fetch('ANNICT_HOST')}"])
-      }
-      # Redirect: www.annict.jp, annict.jp, ja.annict.com, jp.annict.com -> annict.com
-      r301 /.*/, "https://#{ENV.fetch('ANNICT_HOST')}$&", if: proc { |rack_env|
-        rack_env["SERVER_NAME"].in?(["www.#{ENV.fetch('ANNICT_JP_HOST')}", ENV.fetch('ANNICT_JP_HOST'), "ja.annict.com", "jp.annict.com"])
+        rack_env["SERVER_NAME"].in?(["www.#{ENV.fetch('ANNICT_HOST')}", "ja.annict.com", "jp.annict.com"])
       }
       r301 %r{\A/about}, "/"
       r301 %r{\A/activities}, "/"
@@ -84,7 +74,7 @@ module Annict
 
       maintenance_file = File.join(Rails.root, "public", "maintenance.html")
       send_file(/(.*)$(?<!maintenance|favicons)/, maintenance_file, if: proc { |rack_env|
-        ip_address = rack_env["HTTP_X_FORWARDED_FOR"]&.split(",")&.first&.strip
+        ip_address = rack_env["HTTP_CF_CONNECTING_IP"]
 
         File.exist?(maintenance_file) &&
           ENV["ANNICT_MAINTENANCE_MODE"] == "on" &&

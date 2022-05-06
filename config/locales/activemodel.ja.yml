@@ -79,3 +79,5 @@ ja:
           invalid: 'は不正です: %{value}が見つかりません'
         db/series_work_rows_form:
           invalid: 'は不正です: %{value}が見つかりません'
+        recordable:
+          watched_at_cannot_be_in_the_future: には現在までの日時を入力してください

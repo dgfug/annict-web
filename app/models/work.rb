@@ -217,20 +217,24 @@ class Work < ApplicationRecord
     order(season_year: type, season_name: type)
   }
 
-  scope :gt_current_season, -> {
-    season = Season.find_by_slug(ENV.fetch("ANNICT_CURRENT_SEASON"))
-
-    where("season_year >= ? AND season_name > ?", season.year, season.name_value)
+  scope :season_from, -> (season) {
+    where("season_year >= ? AND season_name >= ?", season.year, season.name_value)
       .or(where("season_year > ?", season.year))
       .or(where(season_year: season.year, season_name: nil))
       .or(where(season_year: nil))
   }
 
-  scope :lt_current_season, -> {
-    season = Season.find_by_slug(ENV.fetch("ANNICT_CURRENT_SEASON"))
-
+  scope :season_until, -> (season) {
     where("season_year <= ? AND season_name <= ?", season.year, season.name_value)
       .or(where("season_year < ?", season.year))
+  }
+
+  scope :from_current_season, -> {
+    season_from Season.find_by_slug(ENV.fetch("ANNICT_CURRENT_SEASON"))
+  }
+
+  scope :until_current_season, -> {
+    season_until Season.find_by_slug(ENV.fetch("ANNICT_CURRENT_SEASON"))
   }
 
   def self.statuses(work_ids, user)
@@ -257,6 +261,7 @@ class Work < ApplicationRecord
 
   def build_work_record(
     user:,
+    watched_at:,
     rating_overall: nil,
     rating_animation: nil,
     rating_music: nil,
@@ -276,7 +281,7 @@ class Work < ApplicationRecord
       share_to_twitter: share_to_twitter
     )
     work_record.detect_locale!(:body)
-    work_record.build_record(user: user, work: self)
+    work_record.build_record(user: user, work: self, watched_at: watched_at)
     work_record
   end
 
@@ -425,13 +430,5 @@ class Work < ApplicationRecord
 
     decrement!(:watchers_count) if is_prev_positive
     increment!(:watchers_count) if is_next_positive
-  end
-
-  def work_image_height(width)
-    ((4 * width) / 3).ceil
-  end
-
-  def video_image_height(width)
-    ((9 * width) / 16).ceil
   end
 end

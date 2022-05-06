@@ -8,6 +8,7 @@
 #  aasm_state        :string           default("published"), not null
 #  deleted_at        :datetime
 #  impressions_count :integer          default(0), not null
+#  watched_at        :datetime         not null
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
 #  user_id           :bigint           not null
@@ -17,6 +18,7 @@
 #
 #  index_records_on_deleted_at  (deleted_at)
 #  index_records_on_user_id     (user_id)
+#  index_records_on_watched_at  (watched_at)
 #  index_records_on_work_id     (work_id)
 #
 # Foreign Keys
@@ -59,26 +61,6 @@ class Record < ApplicationRecord
 
   def advanced_rating
     episode_record? ? episode_record.rating : nil
-  end
-
-  def deprecated_animation_rating
-    work_record&.rating_animation_state
-  end
-
-  def deprecated_character_rating
-    work_record&.rating_character_state
-  end
-
-  def deprecated_music_rating
-    work_record&.rating_music_state
-  end
-
-  def deprecated_story_rating
-    work_record&.rating_story_state
-  end
-
-  def deprecated_rating_exists?
-    deprecated_animation_rating || deprecated_music_rating || deprecated_story_rating || deprecated_character_rating
   end
 
   def comment

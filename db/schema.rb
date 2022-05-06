@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_09_083311) do
+ActiveRecord::Schema[6.1].define(version: 2021_10_17_074902) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -191,10 +191,7 @@ ActiveRecord::Schema.define(version: 2021_08_09_083311) do
     t.bigint "user_id", null: false
     t.bigint "collection_id", null: false
     t.bigint "work_id", null: false
-    t.string "title", null: false
-    t.text "comment"
-    t.string "aasm_state", default: "published", null: false
-    t.integer "reactions_count", default: 0, null: false
+    t.text "body", default: "", null: false
     t.integer "position", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -208,15 +205,15 @@ ActiveRecord::Schema.define(version: 2021_08_09_083311) do
 
   create_table "collections", force: :cascade do |t|
     t.bigint "user_id", null: false
-    t.string "title", null: false
-    t.string "description"
-    t.string "aasm_state", default: "published", null: false
+    t.string "name", null: false
+    t.string "description", default: "", null: false
     t.integer "likes_count", default: 0, null: false
-    t.integer "impressions_count", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "deleted_at"
+    t.integer "collection_items_count", default: 0, null: false
     t.index ["deleted_at"], name: "index_collections_on_deleted_at"
+    t.index ["user_id", "name"], name: "index_collections_on_user_id_and_name", unique: true
     t.index ["user_id"], name: "index_collections_on_user_id"
   end
 
@@ -527,6 +524,7 @@ ActiveRecord::Schema.define(version: 2021_08_09_083311) do
     t.bigint "status_id"
     t.bigint "program_id"
     t.bigint "next_slot_id"
+    t.text "note", default: "", null: false
     t.index ["next_episode_id"], name: "index_library_entries_on_next_episode_id"
     t.index ["next_slot_id"], name: "index_library_entries_on_next_slot_id"
     t.index ["program_id"], name: "index_library_entries_on_program_id"
@@ -814,8 +812,10 @@ ActiveRecord::Schema.define(version: 2021_08_09_083311) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "deleted_at"
+    t.datetime "watched_at", null: false
     t.index ["deleted_at"], name: "index_records_on_deleted_at"
     t.index ["user_id"], name: "index_records_on_user_id"
+    t.index ["watched_at"], name: "index_records_on_watched_at"
     t.index ["work_id"], name: "index_records_on_work_id"
   end
 

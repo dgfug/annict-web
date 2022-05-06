@@ -14,14 +14,14 @@ module Sidebars
 
           h.tag :div, class: "c-main-sidebar__content" do
             h.tag :a, href: view_context.root_path, class: "c-main-sidebar__logo d-inline-block mb-3 text-center w-100" do
-              h.tag :img, alt: "Annict", height: 30, loading: "lazy", src: view_context.asset_bundle_url("images/logos/color-white.png"), width: 25
+              h.tag :img, alt: "Annict", height: 30, loading: "lazy", src: view_context.image_url("logos/color-white.png"), width: 25
             end
 
             h.tag :div, class: "mb-3 px-3" do
               if current_user
                 h.tag :a, href: view_context.profile_path(current_user.username), class: "align-content-center row" do
                   h.tag :div, class: "col-3 pe-0" do
-                    h.html Pictures::AvatarPictureComponent.new(view_context, user: current_user, width: 50).render
+                    h.html view_context.render(Pictures::AvatarPictureComponent.new(user: current_user, width: 50))
                   end
 
                   h.tag :div, class: "col-auto" do
