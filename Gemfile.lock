@@ -142,9 +142,9 @@ GEM
     concord (0.1.6)
       adamantium (~> 0.2.0)
       equalizer (~> 0.0.9)
-    concurrent-ruby (1.1.9)
+    concurrent-ruby (1.1.10)
     content_disposition (1.0.0)
-    counter_culture (2.8.0)
+    counter_culture (3.3.0)
       activerecord (>= 4.2)
       activesupport (>= 4.2)
     crass (1.0.6)
@@ -282,7 +282,7 @@ GEM
     httparty (0.18.1)
       mime-types (~> 3.0)
       multi_xml (>= 0.5.2)
-    i18n (1.8.10)
+    i18n (1.12.0)
       concurrent-ruby (~> 1.0)
     i18n-tasks (0.9.34)
       activesupport (>= 4.0.2)
@@ -352,7 +352,7 @@ GEM
     mini_magick (4.11.0)
     mini_mime (1.1.1)
     mini_portile2 (2.6.1)
-    minitest (5.14.4)
+    minitest (5.16.3)
     mjml-rails (4.6.1)
     moji (1.6)
     mprelude (0.1.0)
@@ -602,7 +602,7 @@ GEM
       multipart-post (~> 2.0)
       naught (~> 1.0)
       simple_oauth (~> 0.3.0)
-    tzinfo (2.0.4)
+    tzinfo (2.0.5)
       concurrent-ruby (~> 1.0)
     unf (0.1.4)
       unf_ext
@@ -634,7 +634,7 @@ GEM
     websocket-extensions (0.1.5)
     wilson_score (0.1.0)
     yard (0.9.26)
-    zeitwerk (2.4.2)
+    zeitwerk (2.6.1)
 
 PLATFORMS
   ruby
